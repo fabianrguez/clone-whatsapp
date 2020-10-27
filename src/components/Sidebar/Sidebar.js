@@ -1,10 +1,17 @@
 import { Avatar, IconButton } from '@material-ui/core';
 import { Chat, DonutLarge, MoreVert, SearchOutlined } from '@material-ui/icons';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import './Sidebar.css';
 import SidebarChat from './SidebarChat/SidebarChat';
+import axios from '../../axios';
 
 function Sidebar() {
+  const [rooms, setRooms] = useState([]);
+
+  useEffect(() => {
+    axios.get('/rooms').then((response) => setRooms(response.data));
+  }, []);
+
   return (
     <div className="sidebar">
       <div className="sidebar__header">
@@ -28,9 +35,8 @@ function Sidebar() {
         </div>
       </div>
       <div className="sidebar__chats">
-        <SidebarChat />
-        <SidebarChat />
-        <SidebarChat />
+        {rooms &&
+          rooms.map((room, index) => <SidebarChat key={index} {...room} />)}
       </div>
     </div>
   );
